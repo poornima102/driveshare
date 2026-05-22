@@ -62,7 +62,7 @@ def send_ws_notification(user_id, notif_type, title, message, data={}, target_ur
             }
         )
     except Exception as e:
-        print(f"WebSocket notification error: {e}")
+        pass
 
 
 class CreateOrderView(APIView):
@@ -122,7 +122,6 @@ class CreateOrderView(APIView):
             })
 
         except Exception as e:
-            print(f"Payment order error: {str(e)}")
             return Response(
                 {'error': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
@@ -229,13 +228,13 @@ class VerifyPaymentView(APIView):
                     target_url = f'/dashboard?bookingId={booking.id}',
                 )
             except Exception as e:
-                print(f"Notification send error: {e}")
+                pass
 
             # Send confirmation email
             try:
                 send_booking_confirmed_email(booking)
             except Exception as e:
-                print(f"Email error: {e}")
+                pass
 
             return Response({
                 'message':    'Payment verified successfully',
@@ -268,8 +267,6 @@ class RefundView(APIView):
                 {'error': 'booking_id is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-        print(f"Refund request received: booking_id={booking_id}, user={request.user.id}")
 
         try:
             booking = Booking.objects.select_related('vehicle__owner').get(id=booking_id)
@@ -337,7 +334,7 @@ class RefundView(APIView):
                     target_url = f'/dashboard?bookingId={booking.id}',
                 )
             except Exception as e:
-                print(f"Notification send error: {e}")
+                pass
 
             return Response({
                 'message':        'Booking cancelled. No refund applicable for this cancellation',
@@ -392,7 +389,7 @@ class RefundView(APIView):
                     message    = f'{booking.vehicle.brand} {booking.vehicle.model} booking for {booking.pickup_date.strftime("%d %b")} was cancelled',
                 )
             except Exception as e:
-                print(f"Notification send error: {e}")
+                pass
 
             return Response({
                 'message':        'Booking cancelled and refund initiated',
@@ -404,13 +401,11 @@ class RefundView(APIView):
             })
 
         except razorpay.errors.BadRequestError as e:
-            print(f"Refund Razorpay bad request: {str(e)}")
             return Response(
                 {'error': f'Refund failed: {str(e)}'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            print(f"Refund error: {str(e)}")
             return Response(
                 {'error': f'Refund failed: {str(e)}'},
                 status=status.HTTP_400_BAD_REQUEST

@@ -32,9 +32,7 @@ def send_notification(user, notif_type, title, message, target_url=None, data=No
                 'data':       data or {},
             }
         )
-        print(f"✅ Notification sent to {user.username}: {title}")
         return notification
 
     except Exception as e:
-        print(f"❌ Notification error: {str(e)}")
         return None

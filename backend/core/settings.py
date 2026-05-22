@@ -13,7 +13,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # ─── Security ─────────────────────────────────────────────────
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
 
 # ─── Installed apps ───────────────────────────────────────────
 INSTALLED_APPS = [
@@ -143,10 +143,13 @@ SIMPLE_JWT = {
 }
 
 # ─── CORS ─────────────────────────────────────────────────────
+# ─── CORS for production ──────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'https://driveshare.vercel.app',  # ← add your Vercel URL
 ]
+CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL', default=False)
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -208,6 +211,13 @@ EMAIL_HOST_PASSWORD= env('EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS      = env.bool('EMAIL_USE_TLS', default=True)
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='DriveShare <noreply@driveshare.com>')
 
+# ─── Production security ──────────────────────────────────────
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT     = False  # Railway handles SSL
+    SESSION_COOKIE_SECURE   = True
+    CSRF_COOKIE_SECURE      = True
+
 
 # Cache (use database cache for simplicity)
 CACHES = {
@@ -215,4 +225,33 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'cache_table',
     }
+}
+
+# ─── Logging ──────────────────────────────────────────────────
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class':     'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level':    'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers':  ['console'],
+            'level':     'INFO',
+            'propagate': False,
+        },
+    },
 }

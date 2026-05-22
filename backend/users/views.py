@@ -105,7 +105,6 @@ class SendOTPView(APIView):
             send_otp_email(email)
             return Response({'message': f'OTP sent to {email}'})
         except Exception as e:
-            print(f"OTP email error: {e}")
             return Response({'error': 'Failed to send OTP — check email address'}, status=400)
 
 

@@ -42,7 +42,6 @@ class BookingViewSet(viewsets.ModelViewSet):
             context={'request': request}
         )
         if not serializer.is_valid():
-            print('BOOKING VALIDATION ERRORS:', serializer.errors)
             serializer.is_valid(raise_exception=True)
 
         vehicle     = serializer.validated_data['vehicle']
@@ -60,8 +59,6 @@ class BookingViewSet(viewsets.ModelViewSet):
             total_price = total_price,
             status      = 'pending'
         )
-
-        print(f"DEBUG - Booking created with ID: {booking.id}")
 
         # Return booking ID so frontend can use it for payment
         return Response({
@@ -168,7 +165,7 @@ class BookingViewSet(viewsets.ModelViewSet):
                     }
                 )
             except Exception as e:
-                print(f"Notification error: {e}")
+                pass
         
         bookings = Booking.objects.filter(
             renter=request.user
@@ -238,7 +235,7 @@ class CompleteExpiredBookingsView(APIView):
                     }
                 )
             except Exception as e:
-                print(f"Notification error: {e}")
+                pass
 
         serializer = BookingListSerializer(
             Booking.objects.filter(

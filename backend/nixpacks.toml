@@ -1,0 +1,11 @@
+toml[phases.setup]
+nixPkgs = ["python312", "postgresql"]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[phases.build]
+cmds = ["python manage.py collectstatic --noinput"]
+
+[start]
+cmd = "daphne core.asgi:application --port $PORT --bind 0.0.0.0"

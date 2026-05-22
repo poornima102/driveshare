@@ -17,14 +17,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
-        print(f"✅ Chat WebSocket connected: room={self.room_name}")
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_name,
             self.channel_name
         )
-        print(f"❌ Chat WebSocket disconnected: room={self.room_name}")
 
     async def receive(self, text_data):
         try:
@@ -36,11 +34,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             if not content:
                 return
 
-            print(f"📩 Chat message received from {sender_id} for booking {booking_id}")
-
             # Save message to DB
             message = await self.save_message(sender_id, booking_id, content)
-            print(f"✅ Message saved: {message['id']}")
 
             # Broadcast to everyone in the chat room
             await self.channel_layer.group_send(
@@ -54,7 +49,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'created_at':  message['created_at'],
                 }
             )
-            print(f"📢 Chat message broadcasted to room: {self.room_name}")
 
             # Send notification to the other person
             await self.notify_other_person(
@@ -62,9 +56,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
 
         except Exception as e:
-            import traceback
-            print(f"❌ WebSocket receive error: {e}")
-            print(traceback.format_exc())
+            pass
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps({
@@ -98,18 +90,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def notify_other_person(self, sender_id, booking_id, content, sender_name):
         """Send notification to the other person in the booking"""
         try:
-            print(f"🔔 Processing notification for booking {booking_id}...")
-            
             # Get other person info from database
             recipient_info = await self.get_other_person_info(sender_id, booking_id)
             if not recipient_info:
-                print(f"⚠️  Could not find recipient for booking {booking_id}")
                 return
 
             other_person_id = recipient_info['id']
             recipient_name = recipient_info['name']
-            
-            print(f"📤 Sending notification to {recipient_name} (ID: {other_person_id})")
 
             # Send notification via channel layer (async)
             await self.channel_layer.group_send(
@@ -124,7 +111,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'data':       {'booking_id': str(booking_id)},
                 }
             )
-            print(f"✅ Notification pushed to group: notifications_{other_person_id}")
 
             # Also save to database
             await self.save_notification_to_db(
@@ -134,9 +120,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
 
         except Exception as e:
-            import traceback
-            print(f"❌ Chat notification error: {e}")
-            print(traceback.format_exc())
+            pass
 
     @database_sync_to_async
     def get_other_person_info(self, sender_id, booking_id):
@@ -157,8 +141,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             sender_id_str = str(sender_id)
             renter_id_str = str(booking.renter.id)
             owner_id_str = str(booking.vehicle.owner.id)
-            
-            print(f"📊 Booking {booking_id}: sender={sender_id_str}, renter={renter_id_str}, owner={owner_id_str}")
 
             # Find the OTHER person
             if sender_id_str == renter_id_str:
@@ -168,19 +150,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 other_person = booking.renter
                 role = "Renter"
 
-            print(f"✅ Recipient identified: {other_person.username} ({role})")
-
             return {
                 'id': other_person.id,
                 'name': other_person.username,
             }
 
         except Exception as e:
-            import traceback
-            print(f"❌ Error getting other person: {e}")
-            print(f"   Booking ID: {booking_id}")
-            print(f"   Sender ID: {sender_id}")
-            print(traceback.format_exc())
             return None
 
     @database_sync_to_async
@@ -196,6 +171,5 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 message    = message,
                 target_url = target_url,
             )
-            print(f"✅ Notification saved to DB for user {user_id}")
         except Exception as e:
-            print(f"❌ Error saving notification to DB: {e}")
+            pass

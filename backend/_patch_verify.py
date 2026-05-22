@@ -27,4 +27,3 @@ new = '''        if not email or not otp:
 if old not in text:
     raise RuntimeError('Old text not found in users/views.py')
 path.write_text(text.replace(old, new), encoding='utf-8')
-print('patched')

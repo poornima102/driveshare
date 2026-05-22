@@ -26,7 +26,7 @@ DriveShare Team
             fail_silently=True,
         )
     except Exception as e:
-        print(f"Welcome email error: {str(e)}")
+        pass
 
 
 def send_booking_confirmed_email(booking):
@@ -54,7 +54,7 @@ DriveShare Team
             fail_silently=True,
         )
     except Exception as e:
-        print(f"Booking email error: {str(e)}")
+        pass
 
 
 def send_booking_cancelled_email(booking):
@@ -79,4 +79,4 @@ DriveShare Team
             fail_silently=True,
         )
     except Exception as e:
-        print(f"Cancel email error: {str(e)}")
+        pass

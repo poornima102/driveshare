@@ -43,7 +43,6 @@ class VehicleViewSet(viewsets.ModelViewSet):
         serializer = VehicleCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         vehicle = serializer.save(owner=request.user)
-        print(f"DEBUG - Vehicle created with ID: {vehicle.id}")
         
         # Send notification to all users about new vehicle
         from notifications.models import Notification
@@ -73,7 +72,7 @@ class VehicleViewSet(viewsets.ModelViewSet):
                     }
                 )
             except Exception as e:
-                print(f"Notification error: {e}")
+                pass
 
         # Notify all users about new vehicle (persistent utility)
         try:
@@ -90,9 +89,9 @@ class VehicleViewSet(viewsets.ModelViewSet):
                         target_url = f'/vehicles/{vehicle.id}/',
                     )
                 except Exception as e:
-                    print(f"send_notification error for user {u.id}: {e}")
+                    pass
         except Exception as e:
-            print(f"Notification utility error: {e}")
+            pass
         
         return Response({
             'id':           str(vehicle.id),

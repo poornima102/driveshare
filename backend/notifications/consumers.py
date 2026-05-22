@@ -13,14 +13,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
-        print(f"✅ Notification WebSocket connected for user: {self.user_id}")
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_name,
             self.channel_name
         )
-        print(f"❌ Notification WebSocket disconnected for user: {self.user_id}")
 
     async def receive(self, text_data):
         pass
@@ -35,4 +33,3 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'target_url': event.get('target_url', ''),
             'data':       event.get('data', {}),
         }))
-        print(f"📨 Notification sent to user {self.user_id}: {event.get('title')}")
