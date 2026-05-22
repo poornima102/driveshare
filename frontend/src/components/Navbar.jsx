@@ -46,7 +46,7 @@ const Navbar = () => {
     if (!user?.id) return
     if (wsRef.current?.readyState === WebSocket.CONNECTING || wsRef.current?.readyState === WebSocket.OPEN) return
 
-    const apiBase = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
+    const apiBase = import.meta.env.VITE_API_URL
     const defaultWsScheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://'
     const envBase = import.meta.env.VITE_WS_URL || ''
     const wsBase = envBase

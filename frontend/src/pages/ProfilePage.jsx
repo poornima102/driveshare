@@ -16,7 +16,7 @@ const ProfilePage = () => {
   const [passwordLoading, setPasswordLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const defaultProfileImage = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=256&q=80'
-  const apiBaseURL = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api').replace(/\/api\/?$/, '')
+  const apiBaseURL = (import.meta.env.VITE_API_URL).replace(/\/api\/?$/, '')
   
   const normalizeMediaUrl = (url) => {
     if (!url) return defaultProfileImage
