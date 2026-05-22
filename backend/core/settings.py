@@ -147,15 +147,15 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM':          'user_id',
 }
 
-# ─── CORS ─────────────────────────────────────────────────────
-# ─── CORS for production ──────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'https://driveshare-phi.vercel.app',  # ← your Vercel URL
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://driveshare-phi.vercel.app",
 ]
-CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL', default=False)
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://driveshare-phi.vercel.app",
+]
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
