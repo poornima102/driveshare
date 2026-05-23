@@ -148,10 +148,7 @@ SIMPLE_JWT = {
 }
 
 # ─── CORS ─────────────────────────────────────────────────────
-
-CORS_ALLOWED_ORIGINS = [
-    "https://driveshare-phi.vercel.app",
-]
+CORS_ALLOW_ALL_ORIGINS = True  # temporary - removes origin matching
 
 CORS_ALLOW_CREDENTIALS = True
 
