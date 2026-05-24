@@ -49,7 +49,8 @@ INSTALLED_APPS = [
 
 # ─── Middleware ────────────────────────────────────────────────
 MIDDLEWARE = [
-    'core.cors_middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -148,13 +149,8 @@ SIMPLE_JWT = {
 }
 
 # ─── CORS ─────────────────────────────────────────────────────
-CORS_ALLOW_ALL_ORIGINS = True  # temporary - removes origin matching
-
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://driveshare-phi.vercel.app",
-]
 
 # ─── Django Channels (WebSocket) ──────────────────────────────
 REDIS_URL = env('REDIS_URL', default='redis://127.0.0.1:6379')
