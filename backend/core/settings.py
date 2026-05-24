@@ -149,7 +149,10 @@ SIMPLE_JWT = {
 }
 
 # ─── CORS ─────────────────────────────────────────────────────
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://driveshare-phi.vercel.app",
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
 # ─── Django Channels (WebSocket) ──────────────────────────────
