@@ -1,8 +1,7 @@
 import random
 import string
+import os
 from django.core.cache import cache
-from django.core.mail import send_mail
-from django.conf import settings
 
 
 def generate_otp():
@@ -12,13 +11,37 @@ def generate_otp():
 def send_otp_email(email):
     otp = generate_otp()
     cache.set(f"otp_{email}", otp, timeout=600)
-    send_mail(
-        subject='Your DriveShare verification code',
-        message=f'Your verification code is: {otp}\n\nExpires in 10 minutes.\nDo not share this code.\n\nDriveShare Team',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
-        fail_silently=False,
+
+    import sib_api_v3_sdk
+    from sib_api_v3_sdk.rest import ApiException
+
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key['api-key'] = os.environ.get('BREVO_API_KEY')
+
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+        sib_api_v3_sdk.ApiClient(configuration)
     )
+
+    email_obj = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": email}],
+        sender={"email": "poornimachandran26@gmail.com", "name": "DriveShare"},
+        subject="Your DriveShare OTP Code",
+        html_content=f"""
+        <div style="font-family:sans-serif;max-width:400px;margin:auto;padding:20px">
+            <h2 style="color:#2563EB">🚗 DriveShare</h2>
+            <p>Your verification code is:</p>
+            <h1 style="font-size:48px;letter-spacing:8px;color:#2563EB;text-align:center">
+                {otp}
+            </h1>
+            <p style="color:#888">This code expires in <strong>10 minutes</strong>.</p>
+            <p style="color:#888">Do not share this code with anyone.</p>
+            <hr/>
+            <p style="color:#aaa;font-size:12px">DriveShare Team</p>
+        </div>
+        """
+    )
+
+    api_instance.send_transac_email(email_obj)
     return True
 
 
