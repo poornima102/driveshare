@@ -15,11 +15,12 @@ const ProfilePage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [passwordLoading, setPasswordLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
-  const defaultProfileImage = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=256&q=80'
+  const defaultProfileImage = 'https://via.placeholder.com/256/9CA3AF/FFFFFF?text=DP'
   const apiBaseURL = (import.meta.env.VITE_API_URL).replace(/\/api\/?$/, '')
   
   const normalizeMediaUrl = (url) => {
-    if (!url) return defaultProfileImage
+    if (!url || url === 'null' || url === 'None') return defaultProfileImage
+    if (typeof url !== 'string') return defaultProfileImage
     if (url.startsWith('http')) return url
     const safeUrl = url.startsWith('/') ? url : `/${url}`
     return `${apiBaseURL}${safeUrl}`
@@ -258,6 +259,7 @@ const ProfilePage = () => {
                 <img
                   src={formData.profile_image || defaultProfileImage}
                   alt="Profile"
+                  onError={(e) => { e.currentTarget.src = defaultProfileImage }}
                   className="w-full h-full object-cover"
                 />
               </div>

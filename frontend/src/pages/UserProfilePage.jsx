@@ -38,7 +38,7 @@ const UserProfilePage = () => {
     </div>
   )
 
-  const defaultProfileImage = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80'
+  const defaultProfileImage = 'https://via.placeholder.com/256/9CA3AF/FFFFFF?text=DP'
   const profileImage = user.profile_image || defaultProfileImage
   const rating = user.owner_avg_rating
   const reviewCount = user.owner_review_count
@@ -61,7 +61,7 @@ const UserProfilePage = () => {
                 <div className="absolute bottom-6 left-6 right-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                   <div className="flex items-center gap-4">
                     <div className="h-24 w-24 rounded-3xl overflow-hidden border-4 border-white shadow-xl">
-                      <img src={profileImage} alt="Host avatar" className="h-full w-full object-cover" />
+                      <img src={profileImage} alt="Host avatar" onError={(e) => { e.currentTarget.src = defaultProfileImage }} className="h-full w-full object-cover" />
                     </div>
                     <div>
                       <p className="text-sm uppercase tracking-[0.24em] text-sky-200">{user.is_verified ? 'Verified host' : 'Host profile'}</p>
