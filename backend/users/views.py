@@ -97,15 +97,25 @@ class SendOTPView(APIView):
         if not email:
             return Response({'error': 'Email is required'}, status=400)
 
-        # Check email not already registered
+        # Clear, specific error for already-registered emails
         if User.objects.filter(email=email).exists():
-            return Response({'error': 'Email already registered'}, status=400)
+            return Response(
+                {'error': 'This email is already registered. Please login instead.'},
+                status=400
+            )
 
         try:
             send_otp_email(email)
             return Response({'message': f'OTP sent to {email}'})
         except Exception as e:
-            return Response({'error': 'Failed to send OTP — check email address'}, status=400)
+            # Log the real error so you can see it in Railway logs
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f'OTP send failed for {email}: {str(e)}')
+            return Response(
+                {'error': 'Failed to send OTP. Please try again later.'},
+                status=400
+            )
 
 
 class ChangePasswordView(APIView):
