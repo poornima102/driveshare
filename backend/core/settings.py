@@ -49,7 +49,7 @@ INSTALLED_APPS = [
 
 # ─── Middleware ────────────────────────────────────────────────
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'core.cors_middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
